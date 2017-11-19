@@ -1,0 +1,8 @@
+{% extends "scene/base.html" %}
+{% block content %}
+    <h3>Welcome to my gallery</h3>
+    <ul>
+    <li><a href="{% url 'polls:index' %}">Polling</a></li>
+    <li><a href="{% url 'admin:index' %}">Admin</a></li>
+    </ul>
+{% endblock %}
