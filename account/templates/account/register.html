@@ -1,0 +1,47 @@
+{% extends "scene/base.html" %}
+
+{% block title %}
+    Sign In
+{% endblock %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-lg-5 col-sm-6">
+            <form action="photos.html" method="post" class="mb-5">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="text-center mb-3">
+                            <h5 class="card-title text-center mb-2">Register</h5>
+                            <p class="card-subtitle text-muted">Create new account</p>
+                        </div>
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input class="form-control" id="username" aria-describedby="username-help"
+                                   name="username" placeholder="Enter username">
+                            <small id="username-help" class="form-text text-muted">Must be unique, alpha numeric and
+                                dash only.
+                            </small>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email address</label>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Enter email">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Put secure password">
+                        </div>
+                        <div class="form-group">
+                            <label for="confirm-password">Confirm Password</label>
+                            <input type="password" class="form-control" id="confirm-password"
+                                   name="confirm_password" placeholder="Confirm new password">
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-block btn-primary">Sign Up</button>
+                        <p class="text-center small mt-2 mb-1">Have an account? <a href="login.html">Sign In</a> now</p>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

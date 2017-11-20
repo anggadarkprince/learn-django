@@ -1,0 +1,35 @@
+{% extends "scene/base.html" %}
+
+{% block title %}
+    Sign In
+{% endblock %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-lg-5 col-sm-6">
+            <form action="photos.html" method="post" class="mb-5">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="text-center mb-3">
+                            <h5 class="card-title text-center mb-2">Sign In</h5>
+                            <p class="card-subtitle text-muted">Login to your account</p>
+                        </div>
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input class="form-control" id="username"
+                                   name="username" placeholder="Enter username or email">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Your password">
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-block btn-primary">Sign In Now</button>
+                        <p class="text-center small mt-2 mb-1">Don't have an account? <a href="register.html">Register</a> now</p>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,38 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    line-height: 1.6;
+    padding-top: 50px;
+}
+
+body > .navbar {
+    background: rgb(255, 255, 255);
+    border-bottom: 1px solid rgb(240, 240, 240);
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+ul li {
+    line-height: 1.8;
+}
+
+.container {
+    max-width: 980px;
+}
+
+.navbar-nav [class*="icon-"] {
+    margin-right: 5px;
+}
+
+.list-inline-item:not(:last-child) {
+    margin-right: 15px;
+}
+
+.nav-simple-tab .active {
+    border-bottom: 2px solid;
+}
+
+.nav-simple-tab [class*="icon-"] {
+    margin-right: 8px;
+}
