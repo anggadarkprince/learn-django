@@ -12,8 +12,8 @@
                     <div class="card mb-4">
                         <img class="card-img-top" src="{{ MEDIA_URL }}{{ photo.source }}" alt="{{ photo.photo_title }}">
                         <div class="card-body">
-                            <h4 class="card-title mb-0">{{ photo.photo_title }}</h4>
-                            <a href="{% url 'account:album' photo.album.user.username photo.album.id %}"
+                            <h4 class="card-title mb-1">{{ photo.photo_title }}</h4>
+                            <a href="{% url 'account:album_photo' photo.album.user.username photo.album.id %}"
                                class="card-text small mb-2 d-block">
                                 {{ photo.album.album_title }}
                             </a>

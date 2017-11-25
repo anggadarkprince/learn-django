@@ -1,9 +1,71 @@
 {% extends "scene/base.html" %}
 
 {% block title %}
-    {{ username }}
+    {{ user.full_name }}
 {% endblock %}
 
 {% block content %}
-    account
+    <div class="row justify-content-center mb-3">
+        <div class="col-2">
+            <a href="#" class="d-block rounded-circle align-self-center ml-auto mr-auto"
+               style="background: url('{{ MEDIA_URL }}{{ user.avatar }}') center center / cover; width: 120px; height: 120px;"></a>
+        </div>
+        <div class="col-6">
+            <h3 class="mt-2 mb-0">
+                {{ user.full_name }}
+                <a href="settings.html" class="btn btn-sm btn-outline-dark ml-2">Edit Profile</a>
+            </h3>
+            <p class="lead text-muted mb-2">@{{ user.username }}</p>
+            <ul class="list-inline mb-2">
+                <li class="list-inline-item"><strong>{{ user.num_published_photos }}</strong> Photos</li>
+                <li class="list-inline-item"><strong>{{ user.num_private_photos }}</strong> Private</li>
+                <li class="list-inline-item"><strong>{{ user.num_albums }}</strong> Albums</li>
+                <li class="list-inline-item"><strong>{{ user.num_archived_photos }}</strong> Archived</li>
+            </ul>
+            <p>{{ user.about }}</p>
+        </div>
+    </div>
+
+    <ul class="nav justify-content-center nav-simple-tab">
+        <li class="nav-item">
+            <a class="nav-link active" href="{% url 'account:profile' user.username %}">
+                <i class="icon-picture"></i> Photos</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'account:album' user.username %}">
+                <i class="icon-layers"></i> Albums</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'account:archive' user.username %}">
+                <i class="icon-folder"></i> Archives
+            </a>
+        </li>
+    </ul>
+    <hr style="margin-top: -1px" class="mb-5">
+
+    <div class="card-columns mb-5">
+        {% if photos %}
+            {% for photo in photos %}
+                <div class="card">
+                    <img class="card-img-top" src="{{ MEDIA_URL }}{{ photo.source }}" alt="{{ photo.photo_title }}">
+                    <div class="card-body">
+                        <h4 class="card-title mb-1">{{ photo.photo_title }}</h4>
+                        <a href="{% url 'account:album_photo' photo.album.user.username photo.album.id %}"
+                           class="card-text small mb-2 d-block">
+                            {{ photo.album.album_title }}
+                        </a>
+                        <p class="card-text">
+                            {{ photo.photo_desc }}
+                        </p>
+                        <p class="card-text">
+                            {% load humanize %}
+                            <small class="text-muted">Taken at {{ photo.taken_at|naturaltime }}</small>
+                        </p>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No photos are available.</p>
+        {% endif %}
+    </div>
 {% endblock %}

@@ -16,6 +16,9 @@ class Album(TimestampTable):
     album_title = models.CharField(max_length=50)
     album_desc = models.CharField(max_length=200)
 
+    def num_photos(self):
+        return self.photo_set.count()
+
     class Meta:
         indexes = [
             models.Index(fields=['album_title']),

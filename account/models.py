@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Count, Min, Sum, Avg
 
 
 class User(models.Model):
@@ -13,12 +14,19 @@ class User(models.Model):
     email = models.CharField(max_length=50, unique=True)
     username = models.CharField(max_length=50, unique=True)
     password = models.CharField(max_length=200)
+    avatar = models.ImageField('Image', upload_to='img/avatars/')
     about = models.TextField(blank=True, help_text='Short story about you')
     status = models.TextField(max_length=20, choices=USER_STATUS, default='PENDING')
     created_at = models.DateTimeField('Join Since', auto_now=True)
 
     def full_name(self):
         return self.first_name + ' ' + self.last_name
+
+    def album_total(self):
+        return self.album_set.count()
+
+    def photo_total(self):
+        return self.album_set.annotate(num_photos=Count('photo', distinct=True))
 
     class Meta:
         indexes = [
