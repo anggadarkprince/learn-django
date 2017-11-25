@@ -7,82 +7,72 @@
 {% block content %}
     <div class="row mb-5 justify-content-center">
         <div class="col-md-9">
-            <div class="card mb-4">
-                <img class="card-img-top" src="{{ MEDIA_URL }}img/galleries/image 1.jpg" alt="Card image cap">
-                <div class="card-body">
-                    <h4 class="card-title mb-0">Sunset in Boelona</h4>
-                    <a href="#" class="card-text small mb-2 d-block">Violet in the sky</a>
-                    <p class="card-text mb-1">
-                        This is a longer card with supporting text below as a natural lead-in to additional content.
-                        Someday will be better and shining.
-                    </p>
-                    <p class="card-text small text-muted">Posted at May 2, 2017</p>
-                </div>
-                <div class="card-footer d-sm-flex">
-                    <a href="photos.html" class="d-sm-flex">
-                        <span class="rounded-circle d-inline-block mr-3" style="background: url('{{ MEDIA_URL }}img/avatars/angga.jpg') center center / cover; width: 26px; height: 26px;"></span>
-                        <span>Angga Ari Wijaya</span>
-                    </a>
-                    <a href="#" class="ml-auto text-muted">45<i class="icon-heart ml-2 mt-1"></i></a>
-                </div>
-            </div>
-            <div class="card mb-4">
-                <img class="card-img-top" src="{{ MEDIA_URL }}img/galleries/image 2.jpg" alt="Card image cap">
-                <div class="card-body">
-                    <h4 class="card-title mb-0">Sunset in Boelona</h4>
-                    <a href="#" class="card-text small mb-2 d-block">Violet in the sky</a>
-                    <p class="card-text mb-1">
-                        This is a longer card with supporting text below as a natural lead-in to additional content.
-                        Someday will be better and shining.
-                    </p>
-                    <p class="card-text small text-muted">Posted at May 2, 2017</p>
-                </div>
-                <div class="card-footer d-sm-flex">
-                    <a href="photos.html" class="d-sm-flex">
-                        <span class="rounded-circle d-inline-block mr-3" style="background: url('{{ MEDIA_URL }}img/avatars/angga.jpg') center center / cover; width: 26px; height: 26px;"></span>
-                        <span>Angga Ari Wijaya</span>
-                    </a>
-                    <a href="#" class="ml-auto text-muted">45<i class="icon-heart ml-2 mt-1"></i></a>
-                </div>
-            </div>
-            <div class="card mb-4">
-                <img class="card-img-top" src="{{ MEDIA_URL }}img/galleries/image 3.jpg" alt="Card image cap">
-                <div class="card-body">
-                    <h4 class="card-title mb-0">Sunset in Boelona</h4>
-                    <a href="#" class="card-text small mb-2 d-block">Violet in the sky</a>
-                    <p class="card-text mb-1">
-                        This is a longer card with supporting text below as a natural lead-in to additional content.
-                        Someday will be better and shining.
-                    </p>
-                    <p class="card-text small text-muted">Posted at May 2, 2017</p>
-                </div>
-                <div class="card-footer d-sm-flex">
-                    <a href="photos.html" class="d-sm-flex">
-                        <span class="rounded-circle d-inline-block mr-3" style="background: url('{{ MEDIA_URL }}img/avatars/angga.jpg') center center / cover; width: 26px; height: 26px;"></span>
-                        <span>Angga Ari Wijaya</span>
-                    </a>
-                    <a href="#" class="ml-auto text-muted">45<i class="icon-heart ml-2 mt-1"></i></a>
-                </div>
-            </div>
-            <div class="card mb-4">
-                <img class="card-img-top" src="{{ MEDIA_URL }}img/galleries/image 3.jpg" alt="Card image cap">
-                <div class="card-body">
-                    <h4 class="card-title mb-0">Sunset in Boelona</h4>
-                    <a href="#" class="card-text small mb-2 d-block">Violet in the sky</a>
-                    <p class="card-text mb-1">
-                        This is a longer card with supporting text below as a natural lead-in to additional content.
-                        Someday will be better and shining.
-                    </p>
-                    <p class="card-text small text-muted">Posted at May 2, 2017</p>
-                </div>
-                <div class="card-footer d-sm-flex">
-                    <a href="photos.html" class="d-sm-flex">
-                        <span class="rounded-circle d-inline-block mr-3" style="background: url('{{ MEDIA_URL }}img/avatars/angga.jpg') center center / cover; width: 26px; height: 26px;"></span>
-                        <span>Angga Ari Wijaya</span>
-                    </a>
-                    <a href="#" class="ml-auto text-muted">45<i class="icon-heart ml-2 mt-1"></i></a>
-                </div>
-            </div>
+            {% if latest_photo_list %}
+                {% for photo in latest_photo_list %}
+                    <div class="card mb-4">
+                        <img class="card-img-top" src="{{ MEDIA_URL }}{{ photo.source }}" alt="{{ photo.photo_title }}">
+                        <div class="card-body">
+                            <h4 class="card-title mb-0">{{ photo.photo_title }}</h4>
+                            <a href="{% url 'account:album' photo.album.user.username photo.album.id %}"
+                               class="card-text small mb-2 d-block">
+                                {{ photo.album.album_title }}
+                            </a>
+                            <p class="card-text mb-1">
+                                {{ photo.photo_desc }}
+                            </p>
+                            {% load humanize %}
+                            <p class="card-text small text-muted" title="{{ photo.taken_at|date:"F d, Y H:i" }}">
+                                Taken at {{ photo.taken_at|naturaltime }}
+                            </p>
+                        </div>
+                        <div class="card-footer d-sm-flex">
+                            <a href="{% url 'account:profile' photo.album.user.username %}" class="d-sm-flex">
+                                <span class="rounded-circle d-inline-block mr-3"
+                                      style="background: url('{{ MEDIA_URL }}img/avatars/angga.jpg') center center / cover; width: 26px; height: 26px;"></span>
+                                <span>{{ photo.album.user.full_name }}</span>
+                            </a>
+                            <a href="#" class="ml-auto text-muted">
+                                {{ photo.likes|intword }}<i class="icon-heart ml-2 mt-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No photos are available.</p>
+            {% endif %}
+
+            <nav aria-label="Pagination" class="mt-5">
+                <ul class="pagination">
+                    {% if latest_photo_list.has_previous %}
+                        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                    {% else %}
+                        <li class="page-item disabled">
+                          <a class="page-link" href="#" tabindex="-1">Previous</a>
+                        </li>
+                    {% endif %}
+                    {% for i in latest_photo_list.paginator.page_range %}
+                        {% if latest_photo_list.number == i %}
+                            <li class="page-item active">
+                                <a href="#" class="page-link">
+                                    <span>{{ i }} <span class="sr-only">(current)</span></span>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="page-item">
+                                <a href="?page={{ i }}" class="page-link">{{ i }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                    {% if latest_photo_list.has_next %}
+                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                    {% else %}
+                        <li class="page-item disabled">
+                          <a class="page-link" href="#" tabindex="-1">Next</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+
         </div>
     </div>
 {% endblock %}

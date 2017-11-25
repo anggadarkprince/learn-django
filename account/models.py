@@ -17,6 +17,9 @@ class User(models.Model):
     status = models.TextField(max_length=20, choices=USER_STATUS, default='PENDING')
     created_at = models.DateTimeField('Join Since', auto_now=True)
 
+    def full_name(self):
+        return self.first_name + ' ' + self.last_name
+
     class Meta:
         indexes = [
             models.Index(fields=['email', 'username']),

@@ -20,11 +20,11 @@ from django.conf.urls.static import static
 from . import views
 
 urlpatterns = [
-    url(r'^$', views.index, name='index'),
+    url(r'^$', views.IndexView.as_view(), name='index'),
     url(r'^agreement', views.agreement, name='agreement'),
     url(r'^privacy', views.privacy, name='privacy'),
     url(r'^about', views.about, name='about'),
-    url(r'^account/', include('account.urls')),
+    url(r'^', include('account.urls')),
     url(r'^polls/', include('polls.urls')),
     url(r'^gallery/', include('gallery.urls')),
     url(r'^admin/', admin.site.urls)
