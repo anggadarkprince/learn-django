@@ -10,7 +10,9 @@
             {% if photos %}
                 {% for photo in photos %}
                     <div class="card mb-4">
-                        <img class="card-img-top" src="{{ MEDIA_URL }}{{ photo.source }}" alt="{{ photo.photo_title }}">
+                        <a href="{% url 'gallery:photo' photo.id %}">
+                            <img class="card-img-top" src="{{ MEDIA_URL }}{{ photo.source }}" alt="{{ photo.photo_title }}">
+                        </a>
                         <div class="card-body">
                             <h4 class="card-title mb-1">{{ photo.photo_title }}</h4>
                             <a href="{% url 'account:album_photo' photo.album.user.username photo.album.id %}"

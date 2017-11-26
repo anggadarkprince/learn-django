@@ -39,5 +39,6 @@ def tag(request, slug):
 
     return render(request, 'photo/tag.html', {
         'tag': tag_data,
-        'photos': photos
+        'photos': photos,
+        'paginator': paginator
     })
