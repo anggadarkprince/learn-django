@@ -1,8 +1,15 @@
+from django.contrib.auth.hashers import make_password
 from django.shortcuts import render
+from django.urls import reverse
+from django.utils.safestring import mark_safe
 from django.views.decorators.http import require_http_methods
-from django.db.models import When, Case, Count, Min, Sum, Avg, Q, IntegerField
-from .models import User
+from django.http import HttpResponse, HttpResponseRedirect
+from django.db.models import When, Case, Count, Sum, IntegerField
+from django.core.mail import send_mail, BadHeaderError
+from django.contrib import messages
 from gallery.models import Photo
+from .models import User
+from .forms import RegisterForm
 
 
 @require_http_methods(["GET"])
@@ -10,9 +17,36 @@ def login(request):
     return render(request, 'account/login.html', {})
 
 
-@require_http_methods(["GET"])
+@require_http_methods(["GET", "POST"])
 def register(request):
-    return render(request, 'account/register.html', {})
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+
+            user = User()
+            user.first_name = username
+            user.username = username
+            user.email = email
+            user.password = make_password(password)
+            user.save()
+
+            if user.pk is not None:
+                try:
+                    send_mail('User registered', 'Please activate your account', 'no-reply@scenary.com', [email])
+                    message_content = 'We sent you link in <strong>' + email + '</strong> to activate the account.'
+                    messages.add_message(request, messages.SUCCESS, mark_safe(message_content))
+                    return HttpResponseRedirect(reverse('account:login'))
+                except BadHeaderError:
+                    return HttpResponse('Invalid header found.')
+            else:
+                messages.add_message(request, messages.ERROR, 'Something went wrong.')
+    else:
+        form = RegisterForm()
+
+    return render(request, 'account/register.html', {'form': form})
 
 
 def query_user(username):

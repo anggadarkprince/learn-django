@@ -1,13 +1,44 @@
 {% extends "scene/base.html" %}
 
 {% block title %}
-    Sign In
+    Register
 {% endblock %}
 
 {% block content %}
     <div class="row justify-content-center">
         <div class="col-lg-5 col-sm-6">
-            <form action="photos.html" method="post" class="mb-5">
+
+            {% if error_message %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{ error_message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endif %}
+
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{ form.non_field_errors }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endif %}
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <form action="{% url 'account:register' %}" method="post" class="mb-5">
+                {% csrf_token %}
                 <div class="card">
                     <div class="card-body">
                         <div class="text-center mb-3">
@@ -16,29 +47,35 @@
                         </div>
                         <div class="form-group">
                             <label for="username">Username</label>
-                            <input class="form-control" id="username" aria-describedby="username-help"
-                                   name="username" placeholder="Enter username">
-                            <small id="username-help" class="form-text text-muted">Must be unique, alpha numeric and
-                                dash only.
+                            <input class="form-control {% if form.username.errors  %} is-invalid {% else %}is-valid {% endif %}" id="username"
+                                   name="username" placeholder="Enter username" value="{{ form.username.value|default:'' }}">
+                            <span class="invalid-feedback">{{ form.username.errors.0 }}</span>
+                            <small id="username-help" class="form-text text-muted">
+                                Must be unique, alpha numeric and dash only.
                             </small>
                         </div>
                         <div class="form-group">
                             <label for="email">Email address</label>
-                            <input type="email" class="form-control" id="email" name="email" placeholder="Enter email">
+                            <input type="email" class="form-control {% if form.email.errors  %} is-invalid {% else %}is-valid {% endif %}" id="email" name="email" placeholder="Enter email" value="{{ form.email.value|default:'' }}">
+                            <span class="invalid-feedback">{{ form.email.errors.0 }}</span>
                         </div>
                         <div class="form-group">
                             <label for="password">Password</label>
-                            <input type="password" class="form-control" id="password" name="password" placeholder="Put secure password">
+                            <input type="password" class="form-control {% if form.password.errors  %} is-invalid {% else %}is-valid {% endif %}" id="password" name="password" placeholder="Put secure password">
+                            <span class="invalid-feedback">{{ form.password.errors.0 }}</span>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group has-feedback">
                             <label for="confirm-password">Confirm Password</label>
-                            <input type="password" class="form-control" id="confirm-password"
+                            <input type="password" class="form-control {% if form.confirm_password.errors  %} is-invalid {% else %}is-valid {% endif %}" id="confirm-password"
                                    name="confirm_password" placeholder="Confirm new password">
+                            <span class="invalid-feedback">{{ form.confirm_password.errors.0 }}</span>
                         </div>
                     </div>
                     <div class="card-footer">
                         <button class="btn btn-block btn-primary">Sign Up</button>
-                        <p class="text-center small mt-2 mb-1">Have an account? <a href="login.html">Sign In</a> now</p>
+                        <p class="text-center small mt-2 mb-1">
+                            Have an account? <a href="{% url 'account:login' %}">Sign In</a> now
+                        </p>
                     </div>
                 </div>
             </form>

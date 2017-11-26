@@ -14,7 +14,7 @@ class User(models.Model):
     email = models.CharField(max_length=50, unique=True)
     username = models.CharField(max_length=50, unique=True)
     password = models.CharField(max_length=200)
-    avatar = models.ImageField('Image', upload_to='img/avatars/')
+    avatar = models.ImageField('Image', upload_to='img/avatars/', default='img/avatars/no-avatar.jpg')
     about = models.TextField(blank=True, help_text='Short story about you')
     status = models.TextField(max_length=20, choices=USER_STATUS, default='PENDING')
     created_at = models.DateTimeField('Join Since', auto_now=True)
