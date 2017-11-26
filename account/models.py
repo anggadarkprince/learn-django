@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import Count, Min, Sum, Avg
+from django.db.models import When, Case, Count, Sum, IntegerField
 
 
 class User(models.Model):
@@ -27,6 +27,28 @@ class User(models.Model):
 
     def photo_total(self):
         return self.album_set.annotate(num_photos=Count('photo', distinct=True))
+
+    def find(self, username):
+        album_total = Count('album', distinct=True)
+        all_photo_total = Count('album__photo', distinct=True)
+        published_photo_total = Sum(Case(
+            When(album__photo__status='PUBLISHED', then=1),
+            default=0, output_field=IntegerField()
+        ), distinct=True)
+        private_photo_total = Sum(Case(
+            When(album__photo__status='PRIVATE', then=1),
+            default=0, output_field=IntegerField()
+        ), distinct=True)
+        archived_photo_total = Sum(Case(
+            When(album__photo__status='ARCHIVED', then=1),
+            default=0, output_field=IntegerField()
+        ))
+        user = self.objects.annotate(
+            num_albums=album_total, num_all_photos=all_photo_total,
+            num_published_photos=published_photo_total, num_private_photos=private_photo_total,
+            num_archived_photos=archived_photo_total
+        ).get(username=username)
+        return user
 
     class Meta:
         indexes = [

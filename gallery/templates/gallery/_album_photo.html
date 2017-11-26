@@ -1,0 +1,28 @@
+<div class="text-center mb-4">
+    <h1>
+        <a href="{% url 'account:album' user.username %}">
+            <i class="icon-arrow-left-circle float-left"></i>
+        </a>
+    </h1>
+    <h4 class="mb-1 text-primary">
+        {{ album.album_title }}
+    </h4>
+    <p class="mb-0">
+        {{ album.album_desc|default:"No album description" }}
+    </p>
+    <small class="text-muted">Contain {{ photos.length }} photos</small>
+</div>
+
+<div class="row mb-5">
+    {% if photos %}
+        {% for photo in photos %}
+            <div class="col-4 mb-4">
+                <a href="{% url 'gallery:photo' photo.id %}">
+                    <div class="photo-wrapper" style="background: url('{{ MEDIA_URL }}{{ photo.source }}') center center / cover; height: 300px;"></div>
+                </a>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No albums are available.</p>
+    {% endif %}
+</div>

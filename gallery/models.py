@@ -30,7 +30,7 @@ class Album(TimestampTable):
 
 class Tag(TimestampTable):
     tag_title = models.CharField(max_length=50)
-    tag_slug = models.CharField(max_length=200)
+    tag_slug = models.SlugField(max_length=200)
 
     def __str__(self):
         return self.tag_title
@@ -46,7 +46,7 @@ class Photo(TimestampTable):
     album = models.ForeignKey(Album, on_delete=models.CASCADE)
     photo_title = models.CharField(max_length=200)
     photo_desc = models.CharField(max_length=500, blank=True)
-    source = models.ImageField('Image', upload_to='img/galleries/')
+    source = models.ImageField('Image', upload_to='img/galleries/%Y/%m/%d/')
     mime_type = models.CharField(max_length=30)
     status = models.CharField(max_length=20, choices=PHOTO_STATUS, default='PUBLISHED')
     likes = models.PositiveIntegerField()

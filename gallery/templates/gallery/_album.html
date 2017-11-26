@@ -1,0 +1,27 @@
+<div class="row mb-5">
+    {% if albums %}
+        {% for album in albums %}
+            <div class="col-6">
+                <div class="card mb-4">
+                    <div class="card-img-top" style="height: 250px; background: url('{{ MEDIA_URL }}{{ album.photo_set.first.source|default:"img/galleries/no-cover.jpg" }}') center center / cover"></div>
+                    <div class="card-body">
+                        <h4 class="card-title mb-1">
+                            <a href="{% url 'account:album_photo' user.username album.id %}">
+                                {{ album.album_title }}
+                            </a>
+                        </h4>
+                        <p class="card-text text-muted small mb-2">Contain {{ album.photo_set.count }} photos</p>
+                        <p class="card-text">
+                            {{ album.album_desc }}
+                        </p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="{% url 'account:album_photo' user.username album.id %}" class="btn btn-primary btn-block">Open Album</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No albums are available.</p>
+    {% endif %}
+</div>

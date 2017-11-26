@@ -18,12 +18,13 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from . import views
+from visitor import views as visitor
 
 urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
     url(r'^agreement', views.agreement, name='agreement'),
     url(r'^privacy', views.privacy, name='privacy'),
-    url(r'^about', views.about, name='about'),
+    url(r'^about', visitor.about, name='about'),
     url(r'^polls/', include('polls.urls')),
     url(r'^gallery/', include('gallery.urls')),
     url(r'^admin/', admin.site.urls),

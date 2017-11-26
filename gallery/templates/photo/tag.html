@@ -1,12 +1,16 @@
 {% extends "scene/base.html" %}
 
 {% block title %}
-    Home
+    Tag {{ tag.tag_title }}
 {% endblock %}
 
 {% block content %}
     <div class="row mb-5 justify-content-center">
         <div class="col-md-9">
+            <p class="text-muted float-right">Found {{ photos.count }} items</p>
+            <h4 class="mb-4">
+                Tag: <a href="{% url 'gallery:tag' tag.tag_slug %}">#{{ tag.tag_title }}</a>
+            </h4>
             {% if photos %}
                 {% for photo in photos %}
                     <div class="card mb-4">
@@ -20,6 +24,16 @@
                             <p class="card-text mb-1">
                                 {{ photo.photo_desc }}
                             </p>
+                            {% if photo.tags.all %}
+                                <div class="mb-2">
+                                    {% for tag in photo.tags.all %}
+                                        <a href="{% url 'gallery:tag' tag.tag_slug %}"
+                                           class="badge badge-pill badge-light">
+                                            # {{ tag.tag_title }}
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
                             {% load humanize %}
                             <p class="card-text small text-muted" title="{{ photo.taken_at|date:"F d, Y H:i" }}">
                                 Taken at {{ photo.taken_at|naturaltime }}
@@ -28,7 +42,7 @@
                         <div class="card-footer d-sm-flex">
                             <a href="{% url 'account:photo' photo.album.user.username %}" class="d-sm-flex">
                                 <span class="rounded-circle d-inline-block mr-3"
-                                      style="background: url('{{ MEDIA_URL }}img/avatars/angga.jpg') center center / cover; width: 26px; height: 26px;"></span>
+                                      style="background: url('{{ MEDIA_URL }}{{ photo.album.user.avatar }}') center center / cover; width: 26px; height: 26px;"></span>
                                 <span>{{ photo.album.user.full_name }}</span>
                             </a>
                             <a href="#" class="ml-auto text-muted">
@@ -42,7 +56,6 @@
             {% endif %}
 
             {% include 'gallery/_paging.html' %}
-
         </div>
     </div>
 {% endblock %}

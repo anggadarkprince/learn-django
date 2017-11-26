@@ -1,0 +1,27 @@
+<div class="card-columns mb-5">
+    {% if photos %}
+        {% for photo in photos %}
+            <div class="card">
+                <a href="{% url 'gallery:photo' photo.id %}">
+                    <img class="card-img-top" src="{{ MEDIA_URL }}{{ photo.source }}" alt="{{ photo.photo_title }}">
+                </a>
+                <div class="card-body">
+                    <h4 class="card-title mb-1">{{ photo.photo_title }}</h4>
+                    <a href="{% url 'account:album_photo' photo.album.user.username photo.album.id %}"
+                       class="card-text small mb-2 d-block">
+                        {{ photo.album.album_title }}
+                    </a>
+                    <p class="card-text">
+                        <small>{{ photo.photo_desc }}</small>
+                    </p>
+                    <p class="card-text" title="{{ photo.taken_at|date:"F d, Y H:i" }}">
+                        {% load humanize %}
+                        <small class="text-muted">Taken at {{ photo.taken_at|naturaltime }}</small>
+                    </p>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No photos are available.</p>
+    {% endif %}
+</div>

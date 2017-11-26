@@ -1,7 +1,7 @@
 {% extends "scene/base.html" %}
 
 {% block title %}
-    {{ user.full_name }}
+    {{ user.full_name }}'s {{ page }}
 {% endblock %}
 
 {% block content %}
@@ -28,44 +28,20 @@
 
     <ul class="nav justify-content-center nav-simple-tab">
         <li class="nav-item">
-            <a class="nav-link active" href="{% url 'account:profile' user.username %}">
+            <a class="nav-link{% if request.resolver_match.url_name == "photo" %} active{% endif %}" href="{% url 'account:photo' user.username %}">
                 <i class="icon-picture"></i> Photos</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="{% url 'account:album' user.username %}">
+            <a class="nav-link{% if request.resolver_match.url_name == "album" or request.resolver_match.url_name == "album_photo" %} active{% endif %}" href="{% url 'account:album' user.username %}">
                 <i class="icon-layers"></i> Albums</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="{% url 'account:archive' user.username %}">
+            <a class="nav-link{% if request.resolver_match.url_name == "archive" %} active{% endif %}" href="{% url 'account:archive' user.username %}">
                 <i class="icon-folder"></i> Archives
             </a>
         </li>
     </ul>
     <hr style="margin-top: -1px" class="mb-5">
 
-    <div class="card-columns mb-5">
-        {% if photos %}
-            {% for photo in photos %}
-                <div class="card">
-                    <img class="card-img-top" src="{{ MEDIA_URL }}{{ photo.source }}" alt="{{ photo.photo_title }}">
-                    <div class="card-body">
-                        <h4 class="card-title mb-1">{{ photo.photo_title }}</h4>
-                        <a href="{% url 'account:album_photo' photo.album.user.username photo.album.id %}"
-                           class="card-text small mb-2 d-block">
-                            {{ photo.album.album_title }}
-                        </a>
-                        <p class="card-text">
-                            {{ photo.photo_desc }}
-                        </p>
-                        <p class="card-text">
-                            {% load humanize %}
-                            <small class="text-muted">Taken at {{ photo.taken_at|naturaltime }}</small>
-                        </p>
-                    </div>
-                </div>
-            {% endfor %}
-        {% else %}
-            <p>No photos are available.</p>
-        {% endif %}
-    </div>
+    {% include template_page %}
 {% endblock %}

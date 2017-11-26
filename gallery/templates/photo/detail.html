@@ -1,0 +1,39 @@
+{% extends "scene/base.html" %}
+
+{% block title %}
+    {{ photo.album.user.full_name }} - {{ photo.photo_title }}
+{% endblock %}
+
+{% block content %}
+    <div class="card mb-5">
+        <img class="card-img-top" src="{{ MEDIA_URL }}{{ photo.source }}" alt="{{ photo.photo_title }}">
+        <div class="card-body">
+            <h4 class="card-title mb-1">{{ photo.photo_title }}</h4>
+            <a href="{% url 'account:album_photo' photo.album.user.username photo.album.id %}"
+               class="card-text small mb-2 d-block">
+                {{ photo.album.album_title }}
+            </a>
+            <p class="card-text">
+                {{ photo.photo_desc }}
+            </p>
+            <p class="card-text" title="{{ photo.taken_at|date:"F d, Y H:i" }}">
+                {% load humanize %}
+                <small class="text-muted">Taken at {{ photo.taken_at|naturaltime }}</small>
+            </p>
+            {% for tag in photo.tags.all %}
+                <a href="{% url 'gallery:tag' tag.tag_slug %}" class="badge badge-pill badge-light">
+                    # {{ tag.tag_title }}
+                </a>
+            {% endfor %}
+        </div>
+        <div class="card-footer d-sm-flex">
+            <a href="{% url 'account:photo' photo.album.user.username %}" class="d-sm-flex">
+                <span class="rounded-circle d-inline-block mr-3" style="background: url('{{ MEDIA_URL }}img/avatars/angga.jpg') center center / cover; width: 26px; height: 26px;"></span>
+                <span>{{ photo.album.user.full_name }}</span>
+            </a>
+            <a href="#" class="ml-auto text-muted">
+                {{ photo.likes|intword }}<i class="icon-heart ml-2 mt-1"></i>
+            </a>
+        </div>
+    </div>
+{% endblock %}
