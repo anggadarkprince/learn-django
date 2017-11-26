@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'scene.apps.SceneConfig',
+    'visitor.apps.VisitorConfig',
     'polls.apps.PollsConfig',
     'gallery.apps.GalleryConfig',
     'account.apps.AccountConfig',
