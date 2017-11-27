@@ -1,20 +1,50 @@
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import make_password, check_password
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django.views.decorators.http import require_http_methods
 from django.http import HttpResponse, HttpResponseRedirect
-from django.db.models import When, Case, Count, Sum, IntegerField
+from django.db.models import When, Case, Count, Sum, IntegerField, Q
 from django.core.mail import send_mail, BadHeaderError
 from django.contrib import messages
 from gallery.models import Photo
 from .models import User
-from .forms import RegisterForm
+from .forms import RegisterForm, LoginForm
 
 
-@require_http_methods(["GET"])
+@require_http_methods(["GET", "POST"])
 def login(request):
-    return render(request, 'account/login.html', {})
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+
+            users = User.objects.filter(Q(username=username) | Q(email=username))
+            for user in users:
+                if check_password(password, user.password):
+                    request.session['user_id'] = user.id
+                    request.session['username'] = user.username
+                    request.session['avatar'] = user.avatar.__str__()
+                    request.session['is_logged_in'] = True
+                    return HttpResponseRedirect(reverse('account:photo', args=(user.username,)))
+
+            messages.add_message(request, messages.ERROR, 'Username or password is wrong.')
+    else:
+        form = RegisterForm()
+    return render(request, 'account/login.html', {'form': form})
+
+
+def logout(request):
+    try:
+        del request.session['user_id']
+        del request.session['username']
+        del request.session['avatar']
+        del request.session['is_logged_in']
+        request.session.flush()
+    except KeyError:
+        pass
+    return HttpResponseRedirect('/')
 
 
 @require_http_methods(["GET", "POST"])
@@ -35,7 +65,7 @@ def register(request):
 
             if user.pk is not None:
                 try:
-                    send_mail('User registered', 'Please activate your account', 'no-reply@scenary.com', [email])
+                    send_mail('User registered', 'Please activate your account', 'no-reply@scenary.com', [email], True)
                     message_content = 'We sent you link in <strong>' + email + '</strong> to activate the account.'
                     messages.add_message(request, messages.SUCCESS, mark_safe(message_content))
                     return HttpResponseRedirect(reverse('account:login'))
