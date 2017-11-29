@@ -13,8 +13,10 @@
         <div class="col-6">
             <h3 class="mt-2 mb-0">
                 {{ user.full_name }}
-                {% if request.session.is_logged_in %}
-                    <a href="settings.html" class="btn btn-sm btn-outline-dark ml-2">Edit Profile</a>
+                {% if request.session.is_logged_in and request.session.username == user.username %}
+                    <a href="{% url 'account:settings' %}" class="btn btn-sm btn-outline-dark ml-2">
+                        Edit Profile
+                    </a>
                 {% endif %}
             </h3>
             <p class="lead text-muted mb-2">@{{ user.username }}</p>

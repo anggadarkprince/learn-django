@@ -9,7 +9,7 @@ from django.core.mail import send_mail, BadHeaderError
 from django.contrib import messages
 from gallery.models import Photo
 from .models import User
-from .forms import RegisterForm, LoginForm
+from .forms import RegisterForm, LoginForm, SettingsForm
 
 
 @require_http_methods(["GET", "POST"])
@@ -35,6 +35,7 @@ def login(request):
     return render(request, 'account/login.html', {'form': form})
 
 
+@require_http_methods(["GET", "POST"])
 def logout(request):
     try:
         del request.session['user_id']
@@ -45,6 +46,44 @@ def logout(request):
     except KeyError:
         pass
     return HttpResponseRedirect('/')
+
+
+@require_http_methods(["GET", "POST"])
+def settings(request):
+    user = User.objects.get(username=request.session['username'])
+    if request.method == 'POST':
+        form = SettingsForm(request.POST, request.FILES)
+        form.id = user.id
+        form.hashed_password = user.password
+        if form.is_valid():
+            first_name = form.cleaned_data['first_name']
+            last_name = form.cleaned_data['last_name']
+            username = form.cleaned_data['username']
+            email = form.cleaned_data['email']
+            avatar = form.cleaned_data['avatar']
+            about = form.cleaned_data['about']
+            new_password = form.cleaned_data['new_password']
+
+            user.first_name = first_name
+            user.last_name = last_name
+            user.username = username
+            user.email = email
+            user.about = about
+            if avatar is not None:
+                user.avatar = avatar
+            if new_password is not '':
+                user.password = make_password(new_password)
+            user.save()
+
+            request.session['username'] = user.username
+            request.session['avatar'] = user.avatar.__str__()
+
+            messages.add_message(request, messages.SUCCESS, 'Your profile was successfully updated!')
+            return HttpResponseRedirect(reverse('account:settings'))
+    else:
+        form = SettingsForm()
+
+    return render(request, 'account/settings.html', {'user': user, 'form': form})
 
 
 @require_http_methods(["GET", "POST"])

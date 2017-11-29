@@ -1,0 +1,148 @@
+{% extends "scene/base.html" %}
+
+{% block title %}
+    {{ user.full_name }}'s Settings
+{% endblock %}
+
+{% block content %}
+    <div class="text-center mb-5">
+        <h1>
+            <a href="{% url 'account:photo' user.username %}">
+                <i class="icon-arrow-left-circle float-left"></i>
+            </a>
+        </h1>
+        <h4 class="mb-1 text-primary">Settings</h4>
+        <p>Configure your account information</p>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+
+            {% if error_message %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{ error_message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endif %}
+
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{ form.non_field_errors }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endif %}
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <form action="{% url 'account:settings' %}" method="post" enctype="multipart/form-data" class="mb-5">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label for="first_name">First Name</label>
+                            <input class="form-control {% if form.first_name.errors  %} is-invalid {% endif %}" id="first_name" name="first_name"
+                                   value="{{ form.first_name.value|default:user.first_name }}" placeholder="Your first name">
+                            <span class="invalid-feedback">{{ form.first_name.errors.0 }}</span>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label for="last_name">Last Name</label>
+                            <input class="form-control {% if form.last_name.errors  %} is-invalid {% endif %}" id="last_name" name="last_name"
+                                   value="{{ form.last_name.value|default:user.last_name }}" placeholder="Your last name">
+                            <span class="invalid-feedback">{{ form.last_name.errors.0 }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col col-sm-6">
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input class="form-control {% if form.username.errors  %} is-invalid {% endif %}" id="username" name="username"
+                                   value="{{ form.username.value|default:user.username }}" placeholder="Enter username">
+                            <span class="invalid-feedback">{{ form.username.errors.0 }}</span>
+                            <small id="username-help" class="form-text text-muted">
+                                Must be unique, alpha numeric and dash only.
+                            </small>
+                        </div>
+                    </div>
+                    <div class="col col-sm-6">
+                        <div class="form-group">
+                            <label for="email">Email address</label>
+                            <input type="email" class="form-control {% if form.email.errors  %} is-invalid {% endif %}" id="email" name="email"
+                                   value="{{ form.email.value|default:user.email }}" placeholder="Enter email">
+                            <span class="invalid-feedback">{{ form.email.errors.0 }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="avatar">Avatar</label>
+                    <div class="mb-3 clearfix">
+                        <img style="max-width: 100px; max-height: 100px" src="{{ MEDIA_URL }}{{ user.avatar }}" class="rounded float-left mr-3" alt="{{ user.username }}'s photo">
+                        <div>
+                            <small id="avatar-help" class="form-text text-muted mb-1">
+                                Upload your awesome photo.
+                            </small>
+                            <label class="custom-file">
+                                <input type="file" id="avatar" name="avatar" class="custom-file-input {% if form.avatar.errors  %} is-invalid {% endif %}">
+                                <span class="custom-file-control"></span>
+                            </label>
+                            <span class="invalid-feedback">{{ form.avatar.errors.0 }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="password">About</label>
+                    <textarea class="form-control {% if form.about.errors  %} is-invalid {% endif %}" id="about" name="about" placeholder="Short story about you"
+                              rows="2">{{ form.about.value|default:user.about }}</textarea>
+                    <span class="invalid-feedback">{{ form.about.errors.0 }}</span>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control {% if form.password.errors  %} is-invalid {% endif %}" id="password" name="password" required
+                           placeholder="Your password">
+                    <span class="invalid-feedback">{{ form.password.errors.0 }}</span>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label for="new_password">New Password</label>
+                            <input type="password" class="form-control {% if form.new_password.errors  %} is-invalid {% endif %}" id="new_password" name="new_password"
+                                   placeholder="New password">
+                            <span class="invalid-feedback">{{ form.new_password.errors.0 }}</span>
+                            <small id="new-password-help" class="form-text text-muted">
+                                Leave it blank if you don't intend to change the password.
+                            </small>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label for="confirm_password">Confirm Password</label>
+                            <input type="password" class="form-control {% if form.confirm_password.errors  %} is-invalid {% endif %}" id="confirm_password"
+                                   name="confirm_password" placeholder="Confirm new password">
+                            <span class="invalid-feedback">{{ form.confirm_password.errors.0 }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group mt-4">
+                    <button class="btn btn-block btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
