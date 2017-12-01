@@ -1,16 +1,23 @@
-<div class="text-center mb-4">
-    <h1>
+<div class="text-center mb-4 d-relative">
+    <h1 class="d-abs">
         <a href="{% url 'account:album' user.username %}">
             <i class="icon-arrow-left-circle float-left"></i>
         </a>
     </h1>
+    {% if request.session.is_logged_in and request.session.username == user.username %}
+        <h1 class="d-abs right">
+            <a href="{% url 'gallery:album_edit' album.id %}">
+                <i class="icon-note float-right"></i>
+            </a>
+        </h1>
+    {% endif %}
     <h4 class="mb-1 text-primary">
         {{ album.album_title }}
     </h4>
     <p class="mb-0">
         {{ album.album_desc|default:"No album description" }}
     </p>
-    <small class="text-muted">Contain {{ photos.length }} photos</small>
+    <small class="text-muted">Contain {{ photos.length|default:'0' }} photos</small>
 </div>
 
 <div class="row mb-5">
@@ -23,6 +30,8 @@
             </div>
         {% endfor %}
     {% else %}
-        <p>No albums are available.</p>
+        <div class="col">
+            <p class="text-center">No photo albums are available.</p>
+        </div>
     {% endif %}
 </div>

@@ -1,7 +1,12 @@
 from django.shortcuts import render
+from django.urls import reverse
 from django.views.decorators.http import require_http_methods
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from .models import Photo, Tag
+from django.views.generic import CreateView, UpdateView, DeleteView
+
+from account.models import User
+from .models import Photo, Tag, Album
+from .forms import AlbumForm
 
 from django.views import generic
 from django.utils import timezone
@@ -42,3 +47,37 @@ def tag(request, slug):
         'photos': photos,
         'paginator': paginator
     })
+
+
+class AlbumCreate(CreateView):
+    model = Album
+    template_name = 'album/form.html'
+    form_class = AlbumForm
+
+    def form_valid(self, form):
+        form.instance.user = User.objects.get(username=self.request.session['username'])
+        return super(AlbumCreate, self).form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super(AlbumCreate, self).get_context_data(**kwargs)
+        context['form_title'] = 'Create Album'
+        return context
+
+
+class AlbumEdit(UpdateView):
+    model = Album
+    template_name = 'album/form.html'
+    form_class = AlbumForm
+
+    def get_context_data(self, **kwargs):
+        context = super(UpdateView, self).get_context_data(**kwargs)
+        context['form_title'] = 'Update Album'
+        return context
+
+
+class AlbumDelete(DeleteView):
+    model = Album
+    template_name = 'album/confirm_delete.html'
+
+    def get_success_url(self):
+        return reverse('account:album', kwargs={'username': self.request.session['username']})

@@ -36,3 +36,19 @@ ul li {
 .nav-simple-tab [class*="icon-"] {
     margin-right: 8px;
 }
+
+.d-relative {
+    position: relative;
+}
+
+.d-abs {
+    position: absolute;
+}
+
+.left {
+    left: 0;
+}
+
+.right {
+    right: 0;
+}

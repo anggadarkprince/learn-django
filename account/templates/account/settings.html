@@ -6,7 +6,7 @@
 
 {% block content %}
     <div class="text-center mb-5">
-        <h1>
+        <h1 class="d-abs">
             <a href="{% url 'account:photo' user.username %}">
                 <i class="icon-arrow-left-circle float-left"></i>
             </a>
@@ -17,15 +17,6 @@
 
     <div class="row justify-content-center">
         <div class="col-md-10">
-
-            {% if error_message %}
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    {{ error_message }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            {% endif %}
 
             {% if form.non_field_errors %}
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -145,4 +136,16 @@
         </div>
     </div>
 
+{% endblock %}
+
+{% block javascript %}
+<script>
+    $('.custom-file-input').on('change', function () {
+        var fileName = $(this).val();
+        if (fileName !== '') {
+            fileName = fileName.split('\\').pop();
+        }
+        $(this).next('.custom-file-control').addClass('selected').html(fileName);
+    });
+</script>
 {% endblock %}

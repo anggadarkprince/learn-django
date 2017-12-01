@@ -1,27 +1,51 @@
+{% if request.session.is_logged_in and request.session.username == user.username %}
+    <div class="text-center mb-5">
+        <a href="{% url 'gallery:album_create' %}" class="btn btn-primary">Create Album</a>
+    </div>
+{% endif %}
 <div class="row mb-5">
-    {% if albums %}
-        {% for album in albums %}
-            <div class="col-6">
-                <div class="card mb-4">
-                    <div class="card-img-top" style="height: 250px; background: url('{{ MEDIA_URL }}{{ album.photo_set.first.source|default:"img/galleries/no-cover.jpg" }}') center center / cover"></div>
-                    <div class="card-body">
-                        <h4 class="card-title mb-1">
-                            <a href="{% url 'account:album_photo' user.username album.id %}">
-                                {{ album.album_title }}
+    {% for album in albums %}
+        <div class="col-6">
+            <div class="card mb-4">
+                <div class="card-img-top" style="height: 250px; background: url('{{ MEDIA_URL }}{{ album.photo_set.first.source|default:"img/galleries/no-cover.jpg" }}') center center / cover"></div>
+                <div class="card-body">
+                    {% if request.session.is_logged_in and request.session.username == user.username %}
+                        <div class="dropdown mt-2 float-right">
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <h6 class="dropdown-header">Album Action</h6>
+                                <a class="dropdown-item" href="{% url 'gallery:album_edit' album.id %}">
+                                    <i class="icon-note mr-2"></i> Edit Album
+                                </a>
+                                <a class="dropdown-item" href="{% url 'gallery:album_delete' album.id %}">
+                                    <i class="icon-trash mr-2"></i> Delete
+                                </a>
+                            </div>
+                            <a href="#" data-toggle="dropdown" aria-haspopup="true"
+                               aria-expanded="false" style="line-height: 1">
+                                <i class="icon-options-vertical"></i>
                             </a>
-                        </h4>
-                        <p class="card-text text-muted small mb-2">Contain {{ album.photo_set.count }} photos</p>
-                        <p class="card-text">
-                            {{ album.album_desc }}
-                        </p>
-                    </div>
-                    <div class="card-footer">
-                        <a href="{% url 'account:album_photo' user.username album.id %}" class="btn btn-primary btn-block">Open Album</a>
-                    </div>
+                        </div>
+                    {% endif %}
+                    <h4 class="card-title mb-1">
+                        <a href="{% url 'account:album_photo' user.username album.id %}">
+                            {{ album.album_title }}
+                        </a>
+                    </h4>
+                    <p class="card-text text-muted small mb-2">Contain {{ album.photo_set.count }} photos</p>
+                    <p class="card-text">
+                        {{ album.album_desc }}
+                    </p>
+                </div>
+                <div class="card-footer">
+                    <a href="{% url 'account:album_photo' user.username album.id %}" class="btn btn-primary btn-block">Open
+                        Album
+                    </a>
                 </div>
             </div>
-        {% endfor %}
-    {% else %}
-        <p>No albums are available.</p>
-    {% endif %}
+        </div>
+    {% empty %}
+        <div class="col">
+            <p>No albums are available.</p>
+        </div>
+    {% endfor %}
 </div>

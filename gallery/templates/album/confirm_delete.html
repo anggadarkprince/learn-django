@@ -1,0 +1,25 @@
+{% extends "scene/base.html" %}
+
+{% block title %}
+    Album Form
+{% endblock %}
+
+{% block content %}
+    <div class="card mb-5">
+        <div class="card-body">
+            <h4 class="card-title">Confirm album deletion</h4>
+            <p class="card-text mb-0">
+                Are you sure you want to delete the album <strong>{{ album.album_title }}</strong>?
+            </p>
+            <small class="text-muted">This action is irreversible, proceed with caution.</small>
+        </div>
+        <div class="card-footer">
+            <form method="post" action="{% url 'gallery:album_delete' album.id %}">
+                {% csrf_token %}
+                <a href="{% url 'account:album' request.session.username %}" class="btn btn-default">Cancel</a>
+                <button class="btn btn-danger">Delete Album</button>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

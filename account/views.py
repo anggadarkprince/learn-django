@@ -156,7 +156,7 @@ def photo(request, username):
 @require_http_methods(["GET"])
 def album(request, username):
     user = query_user(username)
-    albums = user.album_set.all()
+    albums = user.album_set.all().order_by('-created_at')
     return render(request, 'account/profile.html', {
         'page': 'album',
         'template_page': 'gallery/_album.html',

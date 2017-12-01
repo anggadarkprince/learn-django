@@ -1,4 +1,6 @@
 from django.db import models
+from django.urls import reverse
+
 from account.models import User
 
 
@@ -26,6 +28,9 @@ class Album(TimestampTable):
 
     def __str__(self):
         return self.album_title
+
+    def get_absolute_url(self):
+        return reverse('account:album_photo', kwargs={'username': self.user.username, 'album_id': self.id})
 
 
 class Tag(TimestampTable):
