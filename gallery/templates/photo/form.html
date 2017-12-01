@@ -1,0 +1,147 @@
+{% extends "scene/base.html" %}
+
+{% block title %}
+    {{ form_title }}
+{% endblock %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-sm-7">
+
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{ form.non_field_errors }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endif %}
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <form action="" method="post" class="mb-5 {% if form.errors %} was-validated {% endif %}"
+                  enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="mb-4">
+                    <h1 class="float-left mr-3">
+                        {% if album %}
+                            <a href="{% url 'account:album_photo' request.session.username album.id %}">
+                                <i class="icon-arrow-left-circle float-left"></i>
+                            </a>
+                        {% else %}
+                            <a href="{% url 'account:photo' request.session.username %}">
+                                <i class="icon-arrow-left-circle float-left"></i>
+                            </a>
+                        {% endif %}
+                    </h1>
+                    <h5 class="mb-0">{{ form_title }}</h5>
+                    <p class="text-muted">Photo album collection</p>
+                </div>
+                {% if album %}
+                    <div class="form-group row">
+                        <label for="photo_album" class="col-sm-4 col-form-label">Album</label>
+                        <div class="col-sm-8">
+                            <input readonly class="form-control-plaintext" id="photo_album" style="width: 100%"
+                                   value="{{ album.album_title }}  ({{ album.photo_set.count }} photos)">
+                        </div>
+                    </div>
+                    <hr>
+                {% else %}
+                    <div class="form-group">
+                        <label for="photo_album">Album</label>
+                        <select class="custom-select w-100" id="photo_album" name="album_id">
+                            {% for album in albums %}
+                                <option value="{{ album.id }}" {% if album.id == photo.album.id %} selected {% endif %}>
+                                    {{ album.album_title }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <span class="form-text">
+                            Add <a href="{% url 'gallery:album_create' %}">new album</a> if you don't have any
+                        </span>
+                    </div>
+                {% endif %}
+
+                <div class="form-group">
+                    <label for="photo_title">Photo Title</label>
+                    <input class="form-control {% if form.photo_title.errors %} is-invalid {% endif %}" id="photo_title"
+                           name="photo_title" placeholder="Put awesome photo title"
+                           value="{{ form.photo_title.value|default:'' }}" required>
+                    <span class="invalid-feedback">{{ form.photo_title.errors.0 }}</span>
+                </div>
+                <div class="form-group has-feedback">
+                    <label for="photo_desc">Description</label>
+                    <textarea class="form-control {% if form.photo_desc.errors %} is-invalid {% endif %}"
+                              id="photo_desc"
+                              name="photo_desc"
+                              placeholder="Photo description">{{ form.photo_desc.value|default:'' }}</textarea>
+                    <span class="invalid-feedback">{{ form.photo_desc.errors.0 }}</span>
+                </div>
+                <div class="form-group">
+                    <label for="source">Photo Source</label>
+                    {% if photo.source %}
+                        <div class="mb-3">
+                            <img src="{{ MEDIA_URL }}{{ photo.source }}" class="rounded img-fluid"
+                                 alt="{{ photo.photo_title }} image">
+                        </div>
+                    {% endif %}
+                    <div>
+                        <label class="custom-file w-100">
+                            <input type="file" {% if not photo.id %} required {% endif %} id="source" name="source"
+                                   class="custom-file-input {% if form.source.errors %} is-invalid {% endif %}">
+                            <span class="custom-file-control"></span>
+                        </label>
+                        <span class="invalid-feedback">{{ form.source.errors.0 }}</span>
+                    </div>
+                </div>
+                <div class="form-group has-feedback">
+                    <label for="published">Privacy</label>
+                    <div>
+                        <label class="custom-control custom-radio">
+                            <input id="private" name="status" type="radio" value="PRIVATE" class="custom-control-input">
+                            <span class="custom-control-indicator"></span>
+                            <span class="custom-control-description">Private</span>
+                        </label>
+                        <label class="custom-control custom-radio">
+                            <input id="published" name="status" type="radio" value="PUBLISHED"
+                                   class="custom-control-input" checked>
+                            <span class="custom-control-indicator"></span>
+                            <span class="custom-control-description">Public</span>
+                        </label>
+                    </div>
+                    <span class="invalid-feedback">{{ form.status.errors.0 }}</span>
+                </div>
+                <div class="form-group">
+                    <label for="photo_title">Taken At</label>
+                    <input class="form-control date-picker {% if form.taken_at.errors %} is-invalid {% endif %}"
+                           required id="taken_at"
+                           name="taken_at" placeholder="The date photo is taken"
+                           value="{{ form.taken_at.value|default:''|date:"m/d/Y" }}">
+                    <span class="invalid-feedback">{{ form.taken_at.errors.0 }}</span>
+                </div>
+                <div class="form-group">
+                    <label for="tags">Tags and Keywords</label>
+                    <input class="form-control {% if form.tags.errors %} is-invalid {% endif %}" id="tags"
+                           name="tags" placeholder="Tag separated by comma" value="{{ form.tags.value|default:'' }}">
+                    <span class="invalid-feedback">{{ form.tags.errors.0 }}</span>
+                </div>
+                <button class="btn btn-block btn-primary mt-4">Save Photo</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    {% load static %}
+    <script src="{% static 'scene/js/app.js' %}"></script>
+{% endblock %}

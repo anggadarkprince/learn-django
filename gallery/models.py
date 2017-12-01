@@ -53,7 +53,7 @@ class Photo(TimestampTable):
     photo_desc = models.CharField(max_length=500, blank=True)
     source = models.ImageField('Image', upload_to='img/galleries/%Y/%m/%d/')
     status = models.CharField(max_length=20, choices=PHOTO_STATUS, default='PUBLISHED')
-    likes = models.PositiveIntegerField()
+    likes = models.PositiveIntegerField(default=0)
     taken_at = models.DateTimeField()
     tags = models.ManyToManyField(Tag)
 

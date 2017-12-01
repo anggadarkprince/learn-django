@@ -17,8 +17,14 @@
     <p class="mb-0">
         {{ album.album_desc|default:"No album description" }}
     </p>
-    <small class="text-muted">Contain {{ photos.length|default:'0' }} photos</small>
+    <small class="text-muted">Contain {{ photos.count|default:'0' }} photos</small>
 </div>
+
+{% if request.session.is_logged_in and request.session.username == user.username %}
+    <div class="text-center mb-5">
+        <a href="{% url 'gallery:album_photo_create' album.id %}" class="btn btn-primary">Upload Photo</a>
+    </div>
+{% endif %}
 
 <div class="row mb-5">
     {% if photos %}

@@ -139,13 +139,6 @@
 {% endblock %}
 
 {% block javascript %}
-<script>
-    $('.custom-file-input').on('change', function () {
-        var fileName = $(this).val();
-        if (fileName !== '') {
-            fileName = fileName.split('\\').pop();
-        }
-        $(this).next('.custom-file-control').addClass('selected').html(fileName);
-    });
-</script>
+    {% load static %}
+    <script src="{% static 'scene/js/app.js' %}"></script>
 {% endblock %}

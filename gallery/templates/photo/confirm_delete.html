@@ -1,0 +1,25 @@
+{% extends "scene/base.html" %}
+
+{% block title %}
+    Delete Photo
+{% endblock %}
+
+{% block content %}
+    <div class="card mb-5">
+        <div class="card-body">
+            <h4 class="card-title">Confirm photo deletion</h4>
+            <p class="card-text mb-0">
+                Are you sure you want to delete the photo <strong>{{ photo.photo_title }}</strong>?
+            </p>
+            <small class="text-muted">This action is irreversible, proceed with caution.</small>
+        </div>
+        <div class="card-footer">
+            <form method="post" action="{% url 'gallery:photo_delete' photo.id %}">
+                {% csrf_token %}
+                <a href="{% url 'account:album_photo' request.session.username photo.album.id %}" class="btn btn-default">Cancel</a>
+                <button class="btn btn-danger">Delete Photo</button>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

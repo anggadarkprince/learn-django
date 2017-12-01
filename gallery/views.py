@@ -6,7 +6,7 @@ from django.views.generic import CreateView, UpdateView, DeleteView
 
 from account.models import User
 from .models import Photo, Tag, Album
-from .forms import AlbumForm
+from .forms import AlbumForm, AlbumPhotoForm
 
 from django.views import generic
 from django.utils import timezone
@@ -15,12 +15,6 @@ from django.utils import timezone
 class PhotoView(generic.DetailView):
     model = Photo
     template_name = 'photo/detail.html'
-
-    def get_queryset(self):
-        """
-        Excludes any questions that aren't published yet.
-        """
-        return Photo.objects.filter(taken_at__lte=timezone.now())
 
 
 @require_http_methods(["GET"])
@@ -64,6 +58,49 @@ class AlbumCreate(CreateView):
         return context
 
 
+class AlbumPhotoCreate(CreateView):
+    model = Photo
+    template_name = 'photo/form.html'
+    form_class = AlbumPhotoForm
+
+    def form_valid(self, form):
+        form.instance.album = Album.objects.get(id=self.kwargs['pk'])
+        return super(AlbumPhotoCreate, self).form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super(AlbumPhotoCreate, self).get_context_data(**kwargs)
+        context['form_title'] = 'Upload Photo Album'
+        context['album'] = Album.objects.get(id=self.kwargs['pk'])
+        return context
+
+    def get_success_url(self):
+        return reverse('account:album_photo', kwargs={
+            'username': self.request.session['username'],
+            'album_id': self.kwargs['pk']
+        })
+
+
+class PhotoCreate(CreateView):
+    model = Photo
+    template_name = 'photo/form.html'
+    form_class = AlbumPhotoForm
+
+    def form_valid(self, form):
+        form.instance.album = Album.objects.get(id=self.request.POST['album_id'])
+        return super(PhotoCreate, self).form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super(PhotoCreate, self).get_context_data(**kwargs)
+        context['form_title'] = 'Upload Photo'
+        context['albums'] = User.objects.get(username=self.request.session['username']).album_set.all()
+        return context
+
+    def get_success_url(self):
+        return reverse('account:photo', kwargs={
+            'username': self.request.session['username']
+        })
+
+
 class AlbumEdit(UpdateView):
     model = Album
     template_name = 'album/form.html'
@@ -75,9 +112,62 @@ class AlbumEdit(UpdateView):
         return context
 
 
+class AlbumPhotoEdit(UpdateView):
+    model = Photo
+    template_name = 'photo/form.html'
+    form_class = AlbumPhotoForm
+
+    def get_object(self, queryset=None):
+        return Photo.objects.get(pk=self.kwargs['pk_photo'])
+
+    def get_context_data(self, **kwargs):
+        context = super(UpdateView, self).get_context_data(**kwargs)
+        context['form_title'] = 'Update Photo Album'
+        context['album'] = Album.objects.get(id=self.kwargs['pk'])
+        return context
+
+    def get_success_url(self):
+        return reverse('gallery:photo', kwargs={
+            'pk': self.kwargs['pk_photo']
+        })
+
+
+class PhotoEdit(UpdateView):
+    model = Photo
+    template_name = 'photo/form.html'
+    form_class = AlbumPhotoForm
+
+    def form_valid(self, form):
+        form.instance.album = Album.objects.get(id=self.request.POST['album_id'])
+        return super(PhotoEdit, self).form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super(UpdateView, self).get_context_data(**kwargs)
+        context['form_title'] = 'Update Photo'
+        context['albums'] = User.objects.get(username=self.request.session['username']).album_set.all()
+        return context
+
+    def get_success_url(self):
+        return reverse('gallery:photo', kwargs={
+            'pk': self.kwargs['pk']
+        })
+
+
 class AlbumDelete(DeleteView):
     model = Album
     template_name = 'album/confirm_delete.html'
 
     def get_success_url(self):
-        return reverse('account:album', kwargs={'username': self.request.session['username']})
+        return reverse('account:album', kwargs={
+            'username': self.request.session['username']
+        })
+
+
+class PhotoDelete(DeleteView):
+    model = Photo
+    template_name = 'photo/confirm_delete.html'
+
+    def get_success_url(self):
+        return reverse('account:photo', kwargs={
+            'username': self.request.session['username']
+        })

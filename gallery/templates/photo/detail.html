@@ -8,6 +8,26 @@
     <div class="card mb-5">
         <img class="card-img-top" src="{{ MEDIA_URL }}{{ photo.source }}" alt="{{ photo.photo_title }}">
         <div class="card-body">
+            {% if request.session.is_logged_in and request.session.username == photo.album.user.username %}
+                <div class="dropdown mt-1 float-right">
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <h6 class="dropdown-header">Photo Action</h6>
+                        <a class="dropdown-item" href="{% url 'gallery:photo_edit' photo.id %}">
+                            <i class="icon-note mr-2"></i> Edit Photo
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <i class="icon-notebook mr-2"></i> Move to Archive
+                        </a>
+                        <a class="dropdown-item" href="{% url 'gallery:photo_delete' photo.id %}">
+                            <i class="icon-trash mr-2"></i> Delete
+                        </a>
+                    </div>
+                    <a href="#" data-toggle="dropdown" aria-haspopup="true"
+                       aria-expanded="false" style="line-height: 1">
+                        <i class="icon-options-vertical"></i>
+                    </a>
+                </div>
+            {% endif %}
             <h4 class="card-title mb-1">{{ photo.photo_title }}</h4>
             <a href="{% url 'account:album_photo' photo.album.user.username photo.album.id %}"
                class="card-text small mb-2 d-block">
@@ -28,7 +48,8 @@
         </div>
         <div class="card-footer d-sm-flex">
             <a href="{% url 'account:photo' photo.album.user.username %}" class="d-sm-flex">
-                <span class="rounded-circle d-inline-block mr-3" style="background: url('{{ MEDIA_URL }}img/avatars/angga.jpg') center center / cover; width: 26px; height: 26px;"></span>
+                <span class="rounded-circle d-inline-block mr-3"
+                      style="background: url('{{ MEDIA_URL }}{{ photo.album.user.avatar }}') center center / cover; width: 26px; height: 26px;"></span>
                 <span>{{ photo.album.user.full_name }}</span>
             </a>
             <a href="#" class="ml-auto text-muted">
