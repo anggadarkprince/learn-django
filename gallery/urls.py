@@ -4,6 +4,7 @@ from . import views
 app_name = 'gallery'
 urlpatterns = [
     url(r'^photo/create', views.PhotoCreate.as_view(), name='photo_create'),
+    url(r'^photo/(?P<photo_id>[0-9]+)/archive', views.archive, name='photo_archive'),
     url(r'^photo/(?P<pk>[0-9]+)/edit', views.PhotoEdit.as_view(), name='photo_edit'),
     url(r'^photo/(?P<pk>[0-9]+)/delete', views.PhotoDelete.as_view(), name='photo_delete'),
     url(r'^photo/(?P<pk>[0-9]+)', views.PhotoView.as_view(), name='photo'),

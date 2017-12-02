@@ -108,13 +108,14 @@
                     <label for="published">Privacy</label>
                     <div>
                         <label class="custom-control custom-radio">
-                            <input id="private" name="status" type="radio" value="PRIVATE" class="custom-control-input">
+                            <input id="private" name="status" type="radio" value="PRIVATE"
+                                   class="custom-control-input" {% if form.status.value|default:'' == 'PRIVATE' %} checked {% endif %}>
                             <span class="custom-control-indicator"></span>
                             <span class="custom-control-description">Private</span>
                         </label>
                         <label class="custom-control custom-radio">
                             <input id="published" name="status" type="radio" value="PUBLISHED"
-                                   class="custom-control-input" checked>
+                                   class="custom-control-input" {% if form.status.value|default:'PUBLISHED' == 'PUBLISHED' %} checked {% endif %}>
                             <span class="custom-control-indicator"></span>
                             <span class="custom-control-description">Public</span>
                         </label>

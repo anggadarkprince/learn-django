@@ -1,4 +1,6 @@
-from django.shortcuts import render
+from django.contrib import messages
+from django.http import HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -171,3 +173,16 @@ class PhotoDelete(DeleteView):
         return reverse('account:photo', kwargs={
             'username': self.request.session['username']
         })
+
+
+@require_http_methods(["POST"])
+def archive(request, photo_id):
+    photo = get_object_or_404(Photo, pk=photo_id)
+    photo.status = 'ARCHIVED'
+    try:
+        photo.save()
+        messages.add_message(request, messages.SUCCESS, 'Photo ' + photo.photo_title + ' successfully archived')
+    except ValueError:
+        messages.add_message(request, messages.ERROR, 'Something went wrong while archiving photo.')
+    return HttpResponseRedirect(reverse('account:photo', args=(photo.album.user.username,)))
+

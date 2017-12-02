@@ -144,8 +144,9 @@ def query_user(username):
 @require_http_methods(["GET"])
 def photo(request, username):
     user = query_user(username)
-    photos = Photo.objects.filter(album__user__username=username) \
-        .exclude(status__exact='ARCHIVED').order_by('-taken_at')
+    photos = Photo.objects.filter(album__user__username=username).exclude(status__exact='ARCHIVED').order_by('-taken_at')
+    if not username == request.session['username']:
+        photos = photos.exclude(status__exact='PRIVATE')
     return render(request, 'account/profile.html', {
         'page': 'photo',
         'template_page': 'gallery/_photo.html',

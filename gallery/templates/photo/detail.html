@@ -5,8 +5,33 @@
 {% endblock %}
 
 {% block content %}
+    <div class="mb-4 d-relative">
+        {% if request.session.is_logged_in and request.session.user_id == photo.album.user.id %}
+            <h1 class="d-abs right">
+                <a href="{% url 'gallery:photo_edit' photo.id %}">
+                    <i class="icon-note float-right"></i>
+                </a>
+            </h1>
+        {% endif %}
+
+        <h1 class="float-left mr-3">
+            <a href="javascript:void(0)" onclick="window.history.back();">
+                <i class="icon-arrow-left-circle float-left"></i>
+            </a>
+        </h1>
+        <h5 class="mb-0">
+            {{ photo.album.user.full_name }}
+            <small class="text-muted">@{{ photo.album.user.username }}</small>
+        </h5>
+        <a href="{% url 'account:photo' photo.album.user.username %}">View user profile</a>
+    </div>
     <div class="card mb-5">
-        <img class="card-img-top" src="{{ MEDIA_URL }}{{ photo.source }}" alt="{{ photo.photo_title }}">
+        <div class="d-relative">
+            <img class="card-img-top" src="{{ MEDIA_URL }}{{ photo.source }}" alt="{{ photo.photo_title }}">
+            {% if photo.status == 'PRIVATE' %}
+                <span class="badge badge-pill d-abs right badge-primary mr-3 mt-3">PRIVATE PHOTO</span>
+            {% endif %}
+        </div>
         <div class="card-body">
             {% if request.session.is_logged_in and request.session.username == photo.album.user.username %}
                 <div class="dropdown mt-1 float-right">
@@ -15,7 +40,7 @@
                         <a class="dropdown-item" href="{% url 'gallery:photo_edit' photo.id %}">
                             <i class="icon-note mr-2"></i> Edit Photo
                         </a>
-                        <a class="dropdown-item" href="#">
+                        <a class="dropdown-item move-to-archive" data-photo-title="{{ photo.photo_title }}" href="{% url 'gallery:photo_archive' photo.id %}">
                             <i class="icon-notebook mr-2"></i> Move to Archive
                         </a>
                         <a class="dropdown-item" href="{% url 'gallery:photo_delete' photo.id %}">
@@ -57,4 +82,13 @@
             </a>
         </div>
     </div>
+{% endblock %}
+
+{% if request.session.is_logged_in and request.session.username == photo.album.user.username %}
+    {% include 'photo/_confirm_archive.html' %}
+{% endif %}
+
+{% block javascript %}
+    {% load static %}
+    <script src="{% static 'scene/js/app.js' %}"></script>
 {% endblock %}

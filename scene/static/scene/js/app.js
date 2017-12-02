@@ -10,4 +10,22 @@ $(document).ready(function () {
     $('.date-picker').datepicker({
         autoclose: true
     });
+
+    var modalConfirmArchive = $('#modal-confirm-archive');
+    modalConfirmArchive.find('[type=submit]').on('click', function () {
+        $(this).attr('disabled', true);
+    });
+    $('.move-to-archive').on('click', function (e) {
+        e.preventDefault();
+
+        var archiveUrl = $(this).attr('href');
+        var photoTitle = $(this).data('photo-title');
+
+        modalConfirmArchive.find('form').attr('action', archiveUrl);
+        modalConfirmArchive.find('#photo-title').text(photoTitle);
+        modalConfirmArchive.modal({
+            backdrop: 'static',
+            keyboard: false
+        });
+    });
 });

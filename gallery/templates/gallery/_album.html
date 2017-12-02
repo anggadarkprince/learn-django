@@ -7,7 +7,9 @@
     {% for album in albums %}
         <div class="col-6">
             <div class="card mb-4">
-                <div class="card-img-top" style="height: 250px; background: url('{{ MEDIA_URL }}{{ album.photo_set.first.source|default:"img/galleries/no-cover.jpg" }}') center center / cover"></div>
+                <a href="{% url 'account:album_photo' user.username album.id %}">
+                    <div class="card-img-top" style="height: 250px; background: url('{{ MEDIA_URL }}{{ album.photo_set.first.source|default:"img/galleries/no-cover.jpg" }}') center center / cover"></div>
+                </a>
                 <div class="card-body">
                     {% if request.session.is_logged_in and request.session.username == user.username %}
                         <div class="dropdown mt-2 float-right">
