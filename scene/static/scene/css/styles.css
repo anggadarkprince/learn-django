@@ -52,3 +52,7 @@ ul li {
 .right {
     right: 0;
 }
+
+.disabled {
+    pointer-events: none;
+}

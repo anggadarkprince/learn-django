@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
@@ -185,4 +185,15 @@ def archive(request, photo_id):
     except ValueError:
         messages.add_message(request, messages.ERROR, 'Something went wrong while archiving photo.')
     return HttpResponseRedirect(reverse('account:photo', args=(photo.album.user.username,)))
+
+
+@require_http_methods(["POST"])
+def like(request, photo_id):
+    photo = get_object_or_404(Photo, pk=photo_id)
+    photo.likes = photo.likes + 1
+    try:
+        photo.save()
+        return JsonResponse({'status': 'success'})
+    except ValueError:
+        return JsonResponse({'status': 'error', 'message': 'Something went wrong'})
 

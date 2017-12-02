@@ -33,8 +33,9 @@
                                       style="background: url('{{ MEDIA_URL }}{{ photo.album.user.avatar }}') center center / cover; width: 26px; height: 26px;"></span>
                                 <span>{{ photo.album.user.full_name }}</span>
                             </a>
-                            <a href="#" class="ml-auto text-muted">
-                                {{ photo.likes|intword }}<i class="icon-heart ml-2 mt-1"></i>
+                            <a href="{% url 'gallery:photo_like' photo.id %}" class="ml-auto text-muted like-photo" data-photo-id="{{ photo.id }}">
+                                <span class="like-total">{{ photo.likes|intword }}</span>
+                                <i class="icon-heart ml-2 mt-1"></i>
                             </a>
                         </div>
                     </div>
@@ -47,4 +48,9 @@
 
         </div>
     </div>
+{% endblock %}
+
+{% block javascript %}
+    {% load static %}
+    <script src="{% static 'scene/js/app.js' %}"></script>
 {% endblock %}

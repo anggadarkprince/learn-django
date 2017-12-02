@@ -28,8 +28,10 @@
     <div class="card mb-5">
         <div class="d-relative">
             <img class="card-img-top" src="{{ MEDIA_URL }}{{ photo.source }}" alt="{{ photo.photo_title }}">
-            {% if photo.status == 'PRIVATE' %}
-                <span class="badge badge-pill d-abs right badge-primary mr-3 mt-3">PRIVATE PHOTO</span>
+            {% if not photo.status == 'PUBLISHED' %}
+                <span class="badge badge-pill d-abs right badge-primary mr-3 mt-3">
+                    {{ photo.status }} PHOTO
+                </span>
             {% endif %}
         </div>
         <div class="card-body">
@@ -77,8 +79,9 @@
                       style="background: url('{{ MEDIA_URL }}{{ photo.album.user.avatar }}') center center / cover; width: 26px; height: 26px;"></span>
                 <span>{{ photo.album.user.full_name }}</span>
             </a>
-            <a href="#" class="ml-auto text-muted">
-                {{ photo.likes|intword }}<i class="icon-heart ml-2 mt-1"></i>
+            <a href="{% url 'gallery:photo_like' photo.id %}" class="ml-auto text-muted like-photo" data-photo-id="{{ photo.id }}">
+                <span class="like-total">{{ photo.likes|intword }}</span>
+                <i class="icon-heart ml-2 mt-1"></i>
             </a>
         </div>
     </div>
