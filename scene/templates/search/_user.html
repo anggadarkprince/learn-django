@@ -1,0 +1,15 @@
+<div class="card-columns mb-5">
+    {% for user in results %}
+        <div class="card text-center">
+        <div class="card-body">
+            <div class="rounded-circle ml-auto mr-auto mb-3" style="background: url('{{ MEDIA_URL }}{{ user.avatar }}') center center / cover; width: 100px; height: 100px"></div>
+            <h4><a href="{% url 'account:photo' user.username %}">{{ user.full_name }}</a></h4>
+            <p class="card-subtitle text-muted">@{{ user.username }}</p>
+            <p>{{ user.about }}</p>
+            <a href="{% url 'account:photo' user.username %}" class="btn btn-primary">View Profile</a>
+        </div>
+        </div>
+    {% empty %}
+        <p>No users are found.</p>
+    {% endfor %}
+</div>

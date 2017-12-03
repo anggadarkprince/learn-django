@@ -1,0 +1,21 @@
+<div class="card-columns mb-5">
+    {% for photo in results %}
+        <div class="card">
+            <a href="{% url 'gallery:photo' photo.id %}">
+                <div class="card-img-top" style="height: 250px; background: url('{{ MEDIA_URL }}{{ photo.source }}') center center / cover"></div>
+            </a>
+            <div class="card-body">
+                <p class="card-text mb-0" style="line-height: 1">
+                    <a href="{% url 'gallery:photo' photo.id %}">
+                        {{ photo.photo_title }}
+                    </a>
+                </p>
+                <small class="text-muted">
+                    @{{ photo.album.user.username }}
+                </small>
+            </div>
+        </div>
+    {% empty %}
+        <p>No photos are found.</p>
+    {% endfor %}
+</div>

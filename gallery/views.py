@@ -184,7 +184,7 @@ def archive(request, photo_id):
         messages.add_message(request, messages.SUCCESS, 'Photo ' + photo.photo_title + ' successfully archived')
     except ValueError:
         messages.add_message(request, messages.ERROR, 'Something went wrong while archiving photo.')
-    return HttpResponseRedirect(reverse('account:photo', args=(photo.album.user.username,)))
+    return HttpResponseRedirect(reverse('account:archive', args=(photo.album.user.username,)))
 
 
 @require_http_methods(["POST"])

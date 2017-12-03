@@ -1,0 +1,25 @@
+<div class="card-columns mb-5">
+    {% for album in results %}
+        <div class="card">
+            <a href="{% url 'account:album_photo' album.user.username album.id %}">
+                <div class="card-img-top" style="height: 250px; background: url('{{ MEDIA_URL }}{{ album.photo_set.first.source|default:"img/galleries/no-cover.jpg" }}') center center / cover"></div>
+            </a>
+            <div class="card-body">
+                <p class="card-text mb-1" style="line-height: 1.3">
+                    <a href="{% url 'account:album_photo' album.user.username album.id %}">
+                        {{ album.album_title }}
+                    </a>
+                    <small class="d-block text-muted">{{ album.album_desc }}</small>
+                </p>
+                <small class="d-block">
+                    Contains {{ album.photo_set.count }} photo{{ album.photo_set.count|pluralize }} by
+                    <a href="{% url 'account:photo' album.user.username %}">
+                        @{{ album.user.username }}
+                    </a>
+                </small>
+            </div>
+        </div>
+    {% empty %}
+        <p>No albums are found.</p>
+    {% endfor %}
+</div>

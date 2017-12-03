@@ -21,10 +21,10 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <form class="form-inline mr-auto {% if request.session.is_logged_in %} ml-auto {% endif %}">
+            <form action="{% url 'search' type_search %}" class="form-inline mr-auto {% if request.session.is_logged_in %} ml-auto {% endif %}">
                 <div class="input-group input-group-sm {% if request.session.is_logged_in %} ml-5 {% else %} ml-4 {% endif %}">
                     <span class="input-group-addon"><i class="icon-magnifier"></i></span>
-                    <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+                    <input class="form-control" type="search" name="q" value="{{ query }}" placeholder="Search" aria-label="Search">
                 </div>
             </form>
             {% if request.session.is_logged_in %}

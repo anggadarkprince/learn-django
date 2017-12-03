@@ -1,0 +1,43 @@
+{% extends "scene/base.html" %}
+
+{% block title %}
+    Search result of '{{ query }}'
+{% endblock %}
+
+{% block content %}
+    <div class="mb-5">
+
+        <div class="row">
+            <div class="col-sm-6">
+                <h4 class="mb-0">Result of <span class="text-primary">"{{ query }}"</span></h4>
+            </div>
+            <div class="col-sm-6 text-sm-right">
+                <p class="text-muted mt-sm-1 mb-0">
+                    Found {{ results.count }} {{ type_search }}{{ results|pluralize }}
+                </p>
+            </div>
+        </div>
+
+        <ul class="nav justify-content-center nav-simple-tab">
+            <li class="nav-item">
+                <a class="nav-link{% if type_search == "photo" %} active{% endif %}"
+                   href="{% url 'search' %}?q={{ query }}">
+                    <i class="icon-picture"></i> Photos</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link{% if type_search == "album" %} active{% endif %}"
+                   href="{% url 'search' 'album' %}?q={{ query }}">
+                    <i class="icon-layers"></i> Albums</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link{% if type_search == "user" %} active{% endif %}"
+                   href="{% url 'search' 'user' %}?q={{ query }}">
+                    <i class="icon-user"></i> Users
+                </a>
+            </li>
+        </ul>
+        <hr style="margin-top: -1px" class="mb-5">
+
+        {% include search_page %}
+    </div>
+{% endblock %}

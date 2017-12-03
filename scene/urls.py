@@ -22,6 +22,7 @@ from visitor import views as visitor
 
 urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
+    url(r'^search/(?P<section>[A-Za-z]+)?$', views.search, name='search'),
     url(r'^agreement', views.agreement, name='agreement'),
     url(r'^privacy', views.privacy, name='privacy'),
     url(r'^about', visitor.about, name='about'),
