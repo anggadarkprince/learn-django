@@ -1,0 +1,23 @@
+{% extends "scene/base.html" %}
+
+{% block title %}
+    Discovery
+{% endblock %}
+
+{% block content %}
+    <div class="mb-5">
+        <h4 class="mb-4">Discovery</h4>
+
+        <div class="row">
+            {% for photo in photos %}
+                <div class="col-4 mb-4">
+                    <a href="{% url 'gallery:photo' photo.id %}">
+                        <div class="photo-wrapper" style="background: url('{{ MEDIA_URL }}{{ photo.source }}') center center / cover; height: 300px;"></div>
+                    </a>
+                </div>
+            {% empty %}
+                <p>No photos are discovered.</p>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

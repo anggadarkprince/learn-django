@@ -33,6 +33,12 @@ class IndexView(generic.ListView):
 
 
 @require_http_methods(["GET"])
+def discovery(request):
+    photos = Photo.objects.raw('SELECT * FROM gallery_photo ORDER BY likes DESC, taken_at DESC')
+    return render(request, 'scene/discovery.html', {'photos': photos})
+
+
+@require_http_methods(["GET"])
 def search(request, section):
     query = request.GET['q']
     if section == 'album':
