@@ -7,7 +7,7 @@
 {% block content %}
     <div class="mb-4 d-relative">
         {% if request.session.is_logged_in and request.session.user_id == photo.album.user.id %}
-            <h1 class="d-abs right">
+            <h1 class="d-abs right d-none d-sm-inline-block">
                 <a href="{% url 'gallery:photo_edit' photo.id %}">
                     <i class="icon-note float-right"></i>
                 </a>

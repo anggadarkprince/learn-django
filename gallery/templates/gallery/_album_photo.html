@@ -5,7 +5,7 @@
         </a>
     </h1>
     {% if request.session.is_logged_in and request.session.username == user.username %}
-        <h1 class="d-abs right">
+        <h1 class="d-abs right d-none d-sm-inline-block">
             <a href="{% url 'gallery:album_edit' album.id %}">
                 <i class="icon-note float-right"></i>
             </a>

@@ -33,10 +33,6 @@ ul li {
     border-bottom: 2px solid;
 }
 
-.nav-simple-tab [class*="icon-"] {
-    margin-right: 8px;
-}
-
 .d-relative {
     position: relative;
 }

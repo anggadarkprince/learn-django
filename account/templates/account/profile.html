@@ -6,15 +6,15 @@
 
 {% block content %}
     <div class="row justify-content-center mb-3">
-        <div class="col-2">
+        <div class="col-sm-3 col-md-2">
             <a href="#" class="d-block rounded-circle align-self-center ml-auto mr-auto"
                style="background: url('{{ MEDIA_URL }}{{ user.avatar }}') center center / cover; width: 120px; height: 120px;"></a>
         </div>
-        <div class="col-6">
+        <div class="col-sm-7 col-md-6 text-center text-sm-left">
             <h3 class="mt-2 mb-0">
                 {{ user.full_name }}
                 {% if request.session.is_logged_in and request.session.username == user.username %}
-                    <a href="{% url 'account:settings' %}" class="btn btn-sm btn-outline-dark ml-2">
+                    <a href="{% url 'account:settings' %}" class="btn btn-sm btn-outline-dark ml-2 d-none d-sm-inline-block">
                         Edit Profile
                     </a>
                 {% endif %}
@@ -22,7 +22,7 @@
             <p class="lead text-muted mb-2">@{{ user.username }}</p>
             <ul class="list-inline mb-2">
                 <li class="list-inline-item"><strong>{{ user.num_published_photos }}</strong> Photos</li>
-                <li class="list-inline-item"><strong>{{ user.num_private_photos }}</strong> Private</li>
+                <li class="list-inline-item d-none d-sm-inline-block"><strong>{{ user.num_private_photos }}</strong> Private</li>
                 <li class="list-inline-item"><strong>{{ user.num_albums }}</strong> Albums</li>
                 <li class="list-inline-item"><strong>{{ user.num_archived_photos }}</strong> Archived</li>
             </ul>
@@ -32,16 +32,18 @@
 
     <ul class="nav justify-content-center nav-simple-tab">
         <li class="nav-item">
-            <a class="nav-link{% if request.resolver_match.url_name == "photo" %} active{% endif %}" href="{% url 'account:photo' user.username %}">
-                <i class="icon-picture"></i> Photos</a>
+            <a class="text-center text-sm-left nav-link{% if request.resolver_match.url_name == "photo" %} active{% endif %}" href="{% url 'account:photo' user.username %}">
+                <i class="icon-picture mr-sm-2"></i><span class="d-block d-sm-inline-block">Photos</span>
+            </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link{% if request.resolver_match.url_name == "album" or request.resolver_match.url_name == "album_photo" %} active{% endif %}" href="{% url 'account:album' user.username %}">
-                <i class="icon-layers"></i> Albums</a>
+            <a class="text-center text-sm-left nav-link{% if request.resolver_match.url_name == "album" or request.resolver_match.url_name == "album_photo" %} active{% endif %}" href="{% url 'account:album' user.username %}">
+                <i class="icon-layers mr-sm-2"></i> <span class="d-block d-sm-inline-block">Albums</span>
+            </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link{% if request.resolver_match.url_name == "archive" %} active{% endif %}" href="{% url 'account:archive' user.username %}">
-                <i class="icon-folder"></i> Archives
+            <a class="text-center text-sm-left nav-link{% if request.resolver_match.url_name == "archive" %} active{% endif %}" href="{% url 'account:archive' user.username %}">
+                <i class="icon-folder mr-sm-2"></i> <span class="d-block d-sm-inline-block">Archives</span>
             </a>
         </li>
     </ul>
