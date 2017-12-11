@@ -43,6 +43,10 @@ $(document).ready(function () {
         autoclose: true
     });
 
+    $('.tags').tagsinput({
+        tagClass: 'badge badge-primary badge-pill'
+    });
+
     var modalConfirmArchive = $('#modal-confirm-archive');
     modalConfirmArchive.find('[type=submit]').on('click', function () {
         $(this).attr('disabled', true);

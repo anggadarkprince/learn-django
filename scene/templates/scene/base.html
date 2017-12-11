@@ -10,6 +10,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'scene/css/bootstrap.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'scene/css/simple-line-icons.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'scene/css/datepicker3.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'scene/css/bootstrap-tagsinput.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'scene/css/styles.css' %}">
 </head>
 <body>
@@ -62,7 +63,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active pl-3 pr-3 ml-2" href="{% url 'account:register' %}">
+                        <a class="nav-link active pl-3 pr-3 ml-2 text-white" href="{% url 'account:register' %}">
                             <i class="icon-user"></i> Register
                         </a>
                     </li>
@@ -109,6 +110,7 @@
         crossorigin="anonymous"></script>
 <script src="{% static 'scene/js/bootstrap.js' %}"></script>
 <script src="{% static 'scene/js/bootstrap-datepicker.js' %}"></script>
+<script src="{% static 'scene/js/bootstrap-tagsinput.js' %}"></script>
 {% block javascript %}
 {% endblock %}
 </body>

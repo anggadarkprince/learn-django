@@ -22,17 +22,17 @@
             <li class="nav-item">
                 <a class="nav-link{% if type_search == "photo" %} active{% endif %}"
                    href="{% url 'search' %}?q={{ query }}">
-                    <i class="icon-picture"></i> Photos</a>
+                    <i class="icon-picture mr-sm-2"></i> Photos</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link{% if type_search == "album" %} active{% endif %}"
                    href="{% url 'search' 'album' %}?q={{ query }}">
-                    <i class="icon-layers"></i> Albums</a>
+                    <i class="icon-layers mr-sm-2"></i> Albums</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link{% if type_search == "user" %} active{% endif %}"
                    href="{% url 'search' 'user' %}?q={{ query }}">
-                    <i class="icon-user"></i> Users
+                    <i class="icon-user mr-sm-2"></i> Users
                 </a>
             </li>
         </ul>

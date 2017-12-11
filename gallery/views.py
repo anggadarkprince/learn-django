@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
+from django.utils.text import slugify
 from django.views.decorators.http import require_http_methods
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import CreateView, UpdateView, DeleteView
@@ -88,7 +89,29 @@ class PhotoCreate(CreateView):
     form_class = AlbumPhotoForm
 
     def form_valid(self, form):
-        form.instance.album = Album.objects.get(id=self.request.POST['album_id'])
+        # form.instance.album = Album.objects.get(id=self.request.POST['album_id'])
+        # article = form.save(commit=False)
+        # article.album = Album.objects.get(id=self.request.POST['album_id'])
+
+        photo = Photo()
+        photo.album = Album.objects.get(id=self.request.POST['album_id'])
+        photo.photo_title = form.cleaned_data['photo_title']
+        photo.photo_desc = form.cleaned_data['photo_desc']
+        photo.source = form.cleaned_data['source']
+        photo.status = form.cleaned_data['status']
+        photo.taken_at = form.cleaned_data['taken_at']
+        photo.save()
+
+        tag_list = form.cleaned_data['tag_list'].split(',')
+        for tag_title in tag_list:
+            tag_slug = slugify(tag_title)
+            available_tag = Tag.objects.filter(tag_slug__exact=tag_slug)
+            if available_tag.count() > 0:
+                photo.tags.add(available_tag.first())
+            else:
+                new_tag = Tag.objects.create(tag_title=tag_title, tag_slug=tag_slug)
+                photo.tags.add(new_tag)
+
         return super(PhotoCreate, self).form_valid(form)
 
     def get_context_data(self, **kwargs):
@@ -196,4 +219,3 @@ def like(request, photo_id):
         return JsonResponse({'status': 'success'})
     except ValueError:
         return JsonResponse({'status': 'error', 'message': 'Something went wrong'})
-
